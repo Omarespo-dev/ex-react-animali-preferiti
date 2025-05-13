@@ -25,8 +25,9 @@
     <script type="text/babel">
       //usestate
       const { useState } = React;
-
+    
       const ListaAnimali = () => {
+        
         const animalsChoices = [
           "Cane",
           "Gatto",
@@ -35,15 +36,29 @@
           "Panda",
         ];
 
-        return (
+        
+        const [animals, setAnimals] = useState([])
+
+        const aggiungiAnimale = () => {
+            
+            const animaleCasuale = animalsChoices[Math.floor(Math.random() * animalsChoices.length)]
+
+            setAnimals([...animals, animaleCasuale])
+        }
+
+        return (<>
+            <button onClick={aggiungiAnimale}>Aggiungi Animale</button>
             <details>
                 <summary>Animali</summary>
                 <ul>
-                    {animalsChoices.map((animale,index) => {
+                    {animals.map((animale,index) => {
                         return <li key={index}>{animale}</li>
                     })}
                 </ul>
-            </details>);
+            </details>
+        
+        </>
+        )
       };
     </script>
 
