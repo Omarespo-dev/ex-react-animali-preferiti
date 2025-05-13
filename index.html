@@ -25,9 +25,40 @@
     <script type="text/babel">
       //usestate
       const { useState } = React;
-    
+
+      function Modal({
+        title,
+        content,
+        show = false,
+        onClose = () => {},
+        onConfirm = () => {},
+      }) {
+        return (
+          show &&
+          ReactDOM.createPortal(
+            <div className="modal-container">
+              <div className="modal">
+                <h2>{title}</h2>
+                <p>{content}</p>
+                <button onClick={onConfirm}>Conferma</button>
+                <button onClick={onClose}>Annulla</button>
+              </div>
+            </div>,
+            document.body
+          )
+        );
+      }
+
       const ListaAnimali = () => {
-        
+        // IMPOSTO STATO PER TRUE E FALSE
+        const [show, setShow] = useState(false);
+
+        //Gestione input
+        const [nomeAnimale, setNomeAnimale] = useState("");
+
+        //GEstione animali casuali con arr vuoto
+        const [animals, setAnimals] = useState([]);
+
         const animalsChoices = [
           "Cane",
           "Gatto",
@@ -36,29 +67,45 @@
           "Panda",
         ];
 
-        
-        const [animals, setAnimals] = useState([])
-
+        //aggiunta animale Conferma: Aggiunge l’animale alla lista e chiude la modale.
         const aggiungiAnimale = () => {
-            
-            const animaleCasuale = animalsChoices[Math.floor(Math.random() * animalsChoices.length)]
+          setAnimals([...animals, nomeAnimale]);
 
-            setAnimals([...animals, animaleCasuale])
-        }
+          setShow(false);
+        };
+        console.log(animals);
 
-        return (<>
-            <button onClick={aggiungiAnimale}>Aggiungi Animale</button>
+        return (
+          <>
+            <button onClick={() => setShow(true)}>Aggiungi Animale</button>
             <details>
-                <summary>Animali</summary>
-                <ul>
-                    {animals.map((animale,index) => {
-                        return <li key={index}>{animale}</li>
-                    })}
-                </ul>
+              <summary>Animali</summary>
+
+              <section>
+                <Modal
+                  title="I miei animali preferiti"
+                  content={
+                    <input
+                      type="text"
+                      onChange={(e) => setNomeAnimale(e.target.value)}
+                      value={nomeAnimale}
+                    />
+                  }
+                  show={show}
+                  onClose={() => setShow(false)}
+                  onConfirm={aggiungiAnimale}
+                />
+              </section>
+
+              <ul>
+                {animals.map((animal, index) => (
+                  <li key={index}>{animal}</li>
+                ))}
+              </ul>
+
             </details>
-        
-        </>
-        )
+          </>
+        );
       };
     </script>
 
